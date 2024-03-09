@@ -2,6 +2,7 @@ from django.db import models
 
 from django.contrib.auth.models import User
 from django.db import models
+from .tel import *
 
 
 
@@ -76,6 +77,20 @@ class Order(models.Model):
     def __str__(self):
         return self.user_id
 
+    def save(self, *args, **kwargs):
+        super(Order, self).save(*args, **kwargs)
+        notify_telegram_about_order(self)
+
+
+def notify_telegram_about_order(order):
+    # создаем сообщение для отправки в Telegram
+    products = order.product.get_products_names() if isinstance(order.product, Basket) else "Unknown products"
+    message = f"Новый заказ!\nID заказа: {order.id}\nПользователь: {order.user_id}\n" \
+              f"Товары: {products}\nКоличество: {order.quantity}\n" \
+              f"Сумма заказа: {order.total_amount}\n"
+
+    # отправляем сообщение в Telegram
+    bot.send_message(TELEGRAM_ID, message)
 
 
 

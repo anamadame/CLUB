@@ -1,0 +1,6 @@
+import telebot
+
+
+TELEGRAM_TOKEN = '7178584615:AAFbErumqT54TNkkCvFh34R7dhiYRpEvDts'
+TELEGRAM_ID = "2120099914"
+bot = telebot.TeleBot(TELEGRAM_TOKEN)

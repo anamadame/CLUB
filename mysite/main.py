@@ -14,10 +14,10 @@ def start(message):
     # Отправляем приветственное сообщение и запрашиваем способ доставки
     bot.send_message(message.chat.id, "Здравствуйте! Выберите способ доставки:")
     bot.send_message(message.chat.id, PICKUP_OR_DELIVERY)
-    res = requests.get(url="http://127.0.0.1:8000/brand/?name=string")
-    # res.encoding()
-    dict_res = res.json()
-    bot.send_message(message.chat.id, dict_res[0]["name"])
+    # res = requests.get(url="http://127.0.0.1:8000/brand/?name=string")
+    # # res.encoding()
+    # dict_res = res.json()
+    # bot.send_message(message.chat.id, dict_res[0]["name"])
 
 
 # Обработчик сообщений
