@@ -5,8 +5,15 @@ from django.db import models
 from .tel import *
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=32, unique=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Brand(models.Model):
+    brand = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=32, unique=True)
     photo = models.ImageField(upload_to="images/brand/", blank=True, null=True)
 
@@ -39,24 +46,64 @@ class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name='название продукта')
     description = models.TextField(verbose_name='описание')
     color = models.ManyToManyField(Color,  blank=True)
-    screen_size = models.CharField(max_length=32, verbose_name='размер экрана', null=True, blank=True)
-    screen_technology = models.CharField(max_length=50,
-                                         verbose_name='технология, используемая на экране (например, OLED)', null=True, blank=True)
-    processor = models.CharField(max_length=50, verbose_name='процессор', null=True, blank=True)
-    rom = models.IntegerField(null=True, blank=True)
-    ram = models.IntegerField(verbose_name="количество ядер", null=True, blank=True)
-    camera_resolution = models.CharField(max_length=50, null=True, blank=True)
-    video_resolution = models.CharField(max_length=50, null=True, blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=2)
     warranty = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
 
+class Harakters(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    screen_size = models.CharField(max_length=32, verbose_name='размер экрана', null=True, blank=True)
+    screen_technology = models.CharField(max_length=50,
+                                         verbose_name='технология, используемая на экране (например, OLED)', null=True,
+                                         blank=True)
+    processor = models.CharField(max_length=50, verbose_name='процессор', null=True, blank=True)
+    ram = models.IntegerField(verbose_name="количество ядер", null=True, blank=True)
+    camera_resolution = models.CharField(max_length=50, null=True, blank=True)
+    video_resolution = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return self.product.name
+
+class Storage(models.Model):
+    rom_choices = (("1", "1"),
+           ("2", "2"),
+           ("4", "4"),
+           ("8", "8"),
+           ("16", "16"),
+           ("32", "32"),
+           ("64", "64"),
+           ("128", "128"),
+           ("256", "256"),
+           ("512", "512"),
+           ("1024", "1024"),
+           ("2048", "2048"),
+           ("4096", "4096"),
+           ("8192", "8192")
+           )
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
+    rom = models.CharField(max_length=10, choices=rom_choices, default='32')
+
+    def str(self):
+        return self.product.name
+
+
+
+
 
 class ProductPhoto(models.Model):
     photo = models.ImageField(upload_to="images/product_image/", blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+
+class CaruselPhoto(models.Model):
+    photo = models.ImageField(upload_to="images/carusel/", blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def str(self):
+        return self.category.name
 
 
 class Favorite(models.Model):
@@ -122,7 +169,7 @@ class Basket(models.Model):
 
 class Reviews(models.Model):
     """Отзывы"""
-    author = models.ForeignKey(User, models.CASCADE)
+    user = models.ForeignKey(User, models.CASCADE)
     text = models.CharField(max_length=300)
     parent = models.ForeignKey(
         'self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
@@ -130,7 +177,7 @@ class Reviews(models.Model):
     product = models.ForeignKey(Product, verbose_name="продукт", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.author} - {self.product}"
+        return f"{self.user.username} - {self.product}"
 
     class Meta:
         verbose_name = "Отзыв"

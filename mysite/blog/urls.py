@@ -12,6 +12,11 @@ urlpatterns = [
     path('user/<int:pk>/', UserViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
          name='user_detail'),
 
+    path('category/', CategoryViewSets.as_view({'get': 'list', 'post': 'create'}),
+         name='category_list'),
+    path('category/<int:pk>/', CategoryViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
+         name='category_detail'),
+
 
     path('brand/', BrandViewSets.as_view({'get': 'list', 'post': 'create'}),
          name='brand_list'),
@@ -29,6 +34,21 @@ urlpatterns = [
          name='product_list'),
     path('product/<int:pk>/', ProductViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
          name='product_detail'),
+
+    path('harakter/', HaraktersViewSets.as_view({'get': 'list', 'post': 'create'}),
+         name='harakter_list'),
+    path('harakter/<int:pk>/', HaraktersViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
+         name='haracter_detail'),
+
+    path('storage/', StorageViewSets.as_view({'get': 'list', 'post': 'create'}),
+         name='storage_list'),
+    path('storage/<int:pk>/', StorageViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
+         name='storage_detail'),
+
+    path('carusel/', CaruselPhotoViewSets.as_view({'get': 'list', 'post': 'create'}),
+         name='carusel_list'),
+    path('carusel/<int:pk>/', CaruselPhotoViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
+         name='carusel_detail'),
 
 
     path('reviews/', ReviewViewSets.as_view({'get': 'list', 'post': 'create'}),

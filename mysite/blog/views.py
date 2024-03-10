@@ -11,20 +11,35 @@ class UserViewSets(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+class CategoryViewSets(viewsets.ModelViewSet):
+    queryset = Category.objects.all()  # Должно быть User.objects.all() вместо просто User
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class HaraktersViewSets(viewsets.ModelViewSet):
+    queryset = Harakters.objects.all()  # Должно быть User.objects.all() вместо просто User
+    serializer_class = HaraktersSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class ProductViewSets(viewsets.ModelViewSet):
     queryset = Product.objects.all()  # Аналогично
     serializer_class = ProductSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['rom', 'price', 'color']
+    filterset_fields = ['price', 'color']
     search_fields = ['name']
+
+class CaruselPhotoViewSets(viewsets.ModelViewSet):
+    queryset = CaruselPhoto.objects.all()  # Должно быть User.objects.all() вместо просто User
+    serializer_class = CaruselPhotoSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class ReviewViewSets(viewsets.ModelViewSet):
     queryset = Reviews.objects.all()  # Исправление имени модели Review
     serializer_class = ReviewSerializer
-    permission_classes = [IsOwerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class RatingViewSets(viewsets.ModelViewSet):
@@ -78,3 +93,11 @@ class ColorViewSets(viewsets.ModelViewSet):
     queryset = Color.objects.all()  # Аналоги чно
     serializer_class = ColorSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+class StorageViewSets(viewsets.ModelViewSet):
+    queryset = Storage.objects.all()  # Аналоги чно
+    serializer_class = StorageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['rom']
+

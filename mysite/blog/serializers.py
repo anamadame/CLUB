@@ -27,6 +27,30 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
+class HaraktersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Harakters
+        fields = '__all__'
+
+
+class StorageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Storage
+        fields = '__all__'
+
+
+class CaruselPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CaruselPhoto
+        fields = '__all__'
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+
 
 class ProductPhotoSerializer(serializers.ModelSerializer):
     class Meta:
