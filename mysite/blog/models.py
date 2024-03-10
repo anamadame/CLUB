@@ -86,7 +86,7 @@ class Storage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
     rom = models.CharField(max_length=10, choices=rom_choices, default='32')
 
-    def str(self):
+    def __str__(self):
         return self.product.name
 
 
@@ -102,17 +102,17 @@ class CaruselPhoto(models.Model):
     photo = models.ImageField(upload_to="images/carusel/", blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
-    def str(self):
+    def __str__(self) :
         return self.category.name
 
 
 class Favorite(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     date_time = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return self.user_id
+        return self.user.username
 
 
 class Order(models.Model):
