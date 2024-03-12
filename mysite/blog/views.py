@@ -4,6 +4,8 @@ from .serializers import *
 from .permissions import *
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class UserViewSets(viewsets.ModelViewSet):
@@ -13,12 +15,20 @@ class UserViewSets(viewsets.ModelViewSet):
 
 
 class ProductViewSets(viewsets.ModelViewSet):
-    queryset = Product.objects.all()  # Аналогично
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['price', 'color']
     search_fields = ['name']
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        # Заменяем идентификаторы фотографий на их URL-адреса
+        for product in serializer.data:
+            product['photos'] = [photo['image'] for photo in product['photos']]
+        return Response(serializer.data)
 
 
 class ReviewViewSets(viewsets.ModelViewSet):

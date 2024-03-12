@@ -28,10 +28,8 @@ class Color(models.Model):
 
 class Photo(models.Model):
     image = models.ImageField(upload_to='product_photos/', verbose_name='фото продукта')
-    name = models.TextField(max_length=100, default='Default Photo Name', verbose_name='название продукта')
 
-    def __str__(self):
-        return self.name
+
 
 
 class Characteristic(models.Model):
@@ -40,10 +38,9 @@ class Characteristic(models.Model):
     value = models.CharField(max_length=255)
 
 
-
 class Product(models.Model):
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    model = models.ForeignKey(Model, on_delete=models.CASCADE, default=1)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='brand')
+    model = models.ForeignKey(Model, on_delete=models.CASCADE, default=1, related_name='model')
     name = models.CharField(max_length=100, verbose_name='название продукта')
     description = models.TextField(verbose_name='описание')
     color = models.ManyToManyField(Color, blank=True)
@@ -109,7 +106,7 @@ class Order(models.Model):
         super(Order, self).save(*args, **kwargs)
         notify_telegram_about_order(self)
 
-    def str(self):
+    def __str__(self):
         return f'{self.user.username} - {self.total_amount}'
 
 def notify_telegram_about_order(order):

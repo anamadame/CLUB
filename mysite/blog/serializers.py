@@ -21,10 +21,24 @@ class ModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
+class PhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = ('image',)
+
 class ProductSerializer(serializers.ModelSerializer):
+    photos = PhotoSerializer(many=True)
+    brand = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    model = serializers.SlugRelatedField(slug_field="name", read_only=True)
+    color = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
+
     class Meta:
         model = Product
         fields = '__all__'
+
+
 
 
 class CaruselPhotoSerializer(serializers.ModelSerializer):
