@@ -176,8 +176,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 TELEGRAM_BOT_TOKEN = '7178584615:AAFbErumqT54TNkkCvFh34R7dhiYRpEvDts'
 
 
@@ -188,3 +186,21 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:9000",
     "http://localhost :5173",
 ]
+
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_USERNAME_MIN_LENGTH = 4
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+LOGIN_REDIRECT_URL = "/"
+SIGNUP_REDIRECT_URL = "/"
+
+
+EMAIL_HOST = 'smtp.yandex.ru'  # замените на ваш SMTP сервер
+EMAIL_PORT = 465  # замените на ваш SMTP порт
+EMAIL_HOST_USER = 'nadirabegim23@yandex.ru'  # замените на ваш email
+EMAIL_HOST_PASSWORD = 'frlitjplpaqdnrko'  # замените на ваш пароль
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER

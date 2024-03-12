@@ -3,15 +3,31 @@ from .models import *
 
 admin.site.register(Brand)
 admin.site.register(Model)
-admin.site.register(Product)
-admin.site.register(ProductPhoto)
+
+
+# admin.py
+from django.contrib import admin
+
+class CharacteristicInline(admin.TabularInline):
+    model = Characteristic
+    extra = 1
+
+class ProductAdmin(admin.ModelAdmin):
+    inlines = [CharacteristicInline]
+    list_display = ('name', 'brand', 'model', 'price', 'warranty')
+
+    def display_characteristics(self, obj):
+        return ', '.join([f'{item.key}: {item.value}' for item in obj.characteristics.all()])
+
+    display_characteristics.short_description = 'Characteristics'
+
+admin.site.register(Product, ProductAdmin)
+
+
 admin.site.register(Favorite)
+admin.site.register(Photo)
 admin.site.register(Order)
 admin.site.register(Color)
-admin.site.register(Rating)
 admin.site.register(Basket)
 admin.site.register(Reviews)
-admin.site.register(Harakters)
-admin.site.register(Storage)
 admin.site.register(CaruselPhoto)
-admin.site.register(Category)
