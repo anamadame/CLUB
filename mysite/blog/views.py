@@ -1,9 +1,11 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
+
 from .models import *
 from .serializers import *
 from .permissions import *
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -19,16 +21,14 @@ class ProductViewSets(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filterset_fields = ['price', 'color']
+    filterset_fields = ['brand', 'model', 'characteristics', 'price', 'color']
     search_fields = ['name']
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        # Заменяем идентификаторы фотографий на их URL-адреса
-        for product in serializer.data:
-            product['photos'] = [photo['image'] for photo in product['photos']]
-        return Response(serializer.data)
+
+class ProductDetailViewSets(viewsets.ModelViewSet):
+    queryset = Product.objects.all()  # Исправление имени модели Review
+    serializer_class = ProductDetailSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 class ReviewViewSets(viewsets.ModelViewSet):
@@ -43,10 +43,31 @@ class CaruselPhotoViewSets(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 
-class FavoriteViewSets(viewsets.ModelViewSet):
-    queryset = Favorite.objects.all()  # Аналогично
-    serializer_class = FavoriteSerializer
+class FavoritePostViewSets(viewsets.ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoritePostSerializer
     permission_classes = [permissions.AllowAny]
+
+
+class BasketPostViewSets(viewsets.ModelViewSet):
+    queryset = Basket.objects.all()
+    serializer_class = BasketPostSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+
+class FavoriteViewSets(viewsets.ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+    permission_classes = [permissions.AllowAny]  # Assuming you want to allow any user to create a favorite
+
+    def create(self, request, *args, **kwargs):
+        # Ensure that the product ID is provided in the request data
+        if 'product' not in request.data:
+            return Response({'product': ['This field is required.']}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Proceed with creating the favorite
+        return super().create(request, *args, **kwargs)
 
 
 class BasketViewSets(viewsets.ModelViewSet):
@@ -70,7 +91,7 @@ class OrderViewSets(viewsets.ModelViewSet):
 
 
 class ModelViewSets(viewsets.ModelViewSet):
-    queryset = Model.objects.all()  # Исправление имени модели Model
+    queryset = Model.objects.all()
     serializer_class = ModelSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]
@@ -78,8 +99,18 @@ class ModelViewSets(viewsets.ModelViewSet):
 
 
 class ColorViewSets(viewsets.ModelViewSet):
-    queryset = Color.objects.all()  # Аналоги чно
+    queryset = Color.objects.all()
     serializer_class = ColorSerializer
     permission_classes = [permissions.AllowAny]
 
 
+class NewsViewSets(viewsets.ModelViewSet):
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class AboutViewSets(viewsets.ModelViewSet):
+    queryset = About.objects.all()
+    serializer_class = AboutSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
