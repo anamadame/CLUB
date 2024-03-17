@@ -8,12 +8,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BrandSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Brand
-        fields = ('name', 'photo')
-
-
 class ModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Model
@@ -49,10 +43,12 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     color = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
     characteristics = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField()
+    brand = serializers.SlugRelatedField(slug_field='brand_name', queryset=Brand.objects.all())
+    model = serializers.SlugRelatedField(slug_field='name', queryset=Model.objects.all())
 
     class Meta:
         model = Product
-        exclude = ('brand', 'model',)
+        fields = '__all__'
 
     def get_characteristics(self, obj):
         characteristics = obj.characteristics.all()
@@ -78,6 +74,14 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         return serialized_reviews
 
 
+class BrandSerializer(serializers.ModelSerializer):
+    product = ProductDetailSerializer()
+
+    class Meta:
+        model = Brand
+        fields = '__all__'
+
+
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
@@ -87,7 +91,7 @@ class ColorSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     color = serializers.SlugRelatedField(slug_field='name', queryset=Color.objects.all(), many=True)
     first_photo = serializers.SerializerMethodField()  # Добавляем поле для первой фотографии
-    brand = serializers.SlugRelatedField(slug_field='name', queryset=Brand.objects.all())
+    brand = serializers.SlugRelatedField(slug_field='brand_name', queryset=Brand.objects.all())
     model = serializers.SlugRelatedField(slug_field='name', queryset=Model.objects.all())
     # brand = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all())  # Добавляем поле для бренда
     # model = serializers.PrimaryKeyRelatedField(queryset=Model.objects.all())
@@ -107,6 +111,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class FavoriteSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
 
+
     class Meta:
         model = Favorite
         fields = '__all__'
@@ -118,7 +123,6 @@ class FavoritePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = '__all__'
-
 class ProductBasketSerializer(serializers.ModelSerializer):
     first_photo = serializers.SerializerMethodField()  # Добавляем поле для первой фотографии
     color = serializers.SlugRelatedField(slug_field='name', queryset=Color.objects.all(), many=True)
@@ -155,6 +159,7 @@ class NewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = '__all__'
+
 
 class AboutSerializer(serializers.ModelSerializer):
 

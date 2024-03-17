@@ -3,6 +3,8 @@ from .views import *
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
+
+
     path('user/', UserViewSets.as_view({'get': 'list', 'post': 'create'}),
          name='user_list'),
     path('user/<int:pk>/', UserViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),

@@ -8,6 +8,9 @@ from rest_framework.filters import SearchFilter
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics
+
+
 
 
 class UserViewSets(viewsets.ModelViewSet):
@@ -81,7 +84,7 @@ class BrandViewSets(viewsets.ModelViewSet):
     serializer_class = BrandSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['name']
+    filterset_fields = ['brand_name']
 
 
 class OrderViewSets(viewsets.ModelViewSet):

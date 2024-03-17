@@ -9,7 +9,7 @@ class CharacteristicInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [CharacteristicInline]
-    list_display = ('name', 'brand', 'model', 'price')
+    list_display = ('name', 'model', 'price')
 
     def display_characteristics(self, obj):
         return ', '.join([f'{item.key}: {item.value}' for item in obj.characteristics.all()])

@@ -4,15 +4,16 @@ from .tel import *
 
 
 class Brand(models.Model):
-    name = models.CharField(max_length=60)
+    brand_name = models.CharField(max_length=60)
     photo = models.ImageField(upload_to="images/brand/", blank=True, null=True)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='brand_products', null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.brand_name
 
 
 
-class Model(models.Model):
+class Model(models.Model):  # Пользовательская модель ProductModel
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=32, unique=True)
 
@@ -42,7 +43,7 @@ class Characteristic(models.Model):
 
 
 class Product(models.Model):
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='brand')
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, default=1, related_name='brand')
     model = models.ForeignKey(Model, on_delete=models.CASCADE, default=1, related_name='model')
     name = models.CharField(max_length=100, verbose_name='название продукта')
     description = models.TextField(verbose_name='описание')
@@ -129,7 +130,7 @@ class Reviews(models.Model):
                                 help_text="Rate the item with 0 to 6 stars.", verbose_name="Rating")
     data = models.DateField(auto_now=True, blank=True, null=True)
 
-    def str(self):
+    def __str__(self):
         return f"{self.user.username} - {self.product}"
 
     class Meta:
