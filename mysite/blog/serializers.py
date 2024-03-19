@@ -93,13 +93,21 @@ class ProductSerializer(serializers.ModelSerializer):
     first_photo = serializers.SerializerMethodField()  # Добавляем поле для первой фотографии
     brand = serializers.SlugRelatedField(slug_field='brand_name', queryset=Brand.objects.all())
     model = serializers.SlugRelatedField(slug_field='name', queryset=Model.objects.all())
+    characteristics = serializers.SerializerMethodField()
     # brand = serializers.PrimaryKeyRelatedField(queryset=Brand.objects.all())  # Добавляем поле для бренда
     # model = serializers.PrimaryKeyRelatedField(queryset=Model.objects.all())
 
     class Meta:
         model = Product
         exclude = ('photos',)  # Исключаем ненужные поля
-        depth = 1  # Глубина вложенности, чтобы исключить связанные объекты
+        # depth = 1  # Глубина вложенности, чтобы исключить связанные объекты
+
+    def get_characteristics(self, obj):
+        characteristics = obj.characteristics.all()
+        characteristics_dict = {}
+        for characteristic in characteristics:
+            characteristics_dict[characteristic.key] = characteristic.value
+        return characteristics_dict
 
     def get_first_photo(self, obj):
         first_photo = obj.photos.first()  # Получаем первую фотографию продукта
