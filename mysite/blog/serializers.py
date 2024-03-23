@@ -26,7 +26,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reviews
-        fields = ('user', 'text', 'stars', 'data', 'parent', 'product')
+        fields = ('id', 'user', 'text', 'stars', 'data', 'parent', 'product')
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -137,7 +137,7 @@ class ProductBasketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('name', 'first_photo', 'stars', 'description', 'color')  # Ваши требуемые поля
+        fields = ('id', 'name', 'first_photo', 'stars', 'description', 'color')  # Ваши требуемые поля
 
     def get_first_photo(self, obj):
         first_photo = obj.photos.first()  # Получаем первую фотографию продукта
