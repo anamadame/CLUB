@@ -23,10 +23,11 @@ class CaruselPhotoSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     parent = serializers.PrimaryKeyRelatedField(queryset=Reviews.objects.all(), required=False, allow_null=True)
     product = serializers.SlugRelatedField(slug_field="name", queryset=Product.objects.all())
+    user = serializers.SlugRelatedField(slug_field="username", queryset=User.objects.all())
 
     class Meta:
         model = Reviews
-        fields = ('user', 'text', 'stars', 'data', 'parent', 'product')
+        fields = ('id', 'user', 'text', 'stars', 'data', 'parent', 'product')
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -137,7 +138,7 @@ class ProductBasketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('name', 'first_photo', 'stars', 'description', 'color')  # Ваши требуемые поля
+        fields = ('id', 'name', 'first_photo', 'stars', 'description', 'color')  # Ваши требуемые поля
 
     def get_first_photo(self, obj):
         first_photo = obj.photos.first()  # Получаем первую фотографию продукта
