@@ -12,7 +12,6 @@ class Brand(models.Model):
         return self.brand_name
 
 
-
 class Model(models.Model):  # Пользовательская модель ProductModel
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=32, unique=True)

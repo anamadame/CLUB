@@ -9,7 +9,26 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
+from rest_framework.generics import UpdateAPIView
+from rest_framework.response import Response
 
+
+class ProductStarUpdateView(UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]  # Пример разрешений - замените на необходимые
+
+    def patch(self, request, *args, **kwargs):
+        partial = True
+        instance = self.get_object()
+        stars = request.data.get('stars')  # Получаем значение поля star из запроса
+
+        # Валидируем и обновляем только поле star
+        serializer = self.get_serializer(instance, data={'stars': stars}, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
 
 
 
