@@ -56,7 +56,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = '_all_'
+        fields = '__all__'
 
     def get_characteristics(self, obj):
         characteristics = obj.characteristics.all()
