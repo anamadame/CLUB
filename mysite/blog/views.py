@@ -32,6 +32,7 @@ class ProductStarUpdateView(UpdateAPIView):
 
 
 
+
 class UserViewSets(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -47,10 +48,33 @@ class ProductViewSets(viewsets.ModelViewSet):
     search_fields = ['name']
 
 
-class ProductDetailViewSets(viewsets.ModelViewSet):
-    queryset = Product.objects.all()  # Исправление имени модели Review
+class ProductDetailViewSets(viewsets.ModelViewSet, UpdateAPIView):
+    queryset = Product.objects.all()
     serializer_class = ProductDetailSerializer
     permission_classes = [permissions.AllowAny]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset=Photo.objects.all(), many=True)
+        data = serializer.data
+
+        # Проходим по каждому объекту и заменяем ID на ссылку на фото
+        for item in data:
+            item['photos'] = item.pop('photos').url if item.get('photos') else None
+
+        return Response(data)
+
+    def patch(self, request, *args, **kwargs):
+        partial = True
+        instance = self.get_object()
+        stars = request.data.get('stars')  # Получаем значение поля star из запроса
+
+        # Валидируем и обновляем только поле star
+        serializer = self.get_serializer(instance, data={'stars': stars}, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
 
 
 class ReviewViewSets(viewsets.ModelViewSet):

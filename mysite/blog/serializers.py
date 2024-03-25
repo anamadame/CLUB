@@ -38,18 +38,25 @@ class PhotoSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return self.context['request'].build_absolute_uri(instance.image.url)
 
-
 class ProductDetailSerializer(serializers.ModelSerializer):
-    photos = PhotoSerializer(many=True)
     color = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
     characteristics = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField()
     brand = serializers.SlugRelatedField(slug_field='brand_name', queryset=Brand.objects.all())
     model = serializers.SlugRelatedField(slug_field='name', queryset=Model.objects.all())
+    photos = serializers.SerializerMethodField()  # Добавим это поле
+
+    def get_photos(self, obj):
+        request = self.context.get('request')
+        if request is not None:
+            # Получаем список URL-адресов изображений, добавляя домен и порт
+            return [request.build_absolute_uri(photo.image.url) for photo in obj.photos.all()] if obj.photos.exists() else []
+        else:
+            return []
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = '_all_'
 
     def get_characteristics(self, obj):
         characteristics = obj.characteristics.all()

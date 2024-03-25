@@ -4,7 +4,13 @@ from .views import *
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
 
+    path('product/', ProductViewSets.as_view({'get': 'list', 'post': 'create'}),
+         name='product_list'),
+    path('product/<int:pk>/', ProductDetailViewSets.as_view({'get': 'retrieve', 'patch': 'patch', 'delete': 'destroy'}),
+         name='product_detail'),
+
     path('product/<int:pk>/star/', ProductStarUpdateView.as_view(), name='product-star-update'),
+
     path('user/', UserViewSets.as_view({'get': 'list', 'post': 'create'}),
          name='user_list'),
     path('user/<int:pk>/', UserViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
@@ -24,11 +30,6 @@ urlpatterns = [
          name='model_list'),
     path('model/<int:pk>/', ModelViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
          name='model_detail'),
-
-    path('product/', ProductViewSets.as_view({'get': 'list', 'post': 'create'}),
-         name='product_list'),
-    path('product/<int:pk>/', ProductDetailViewSets.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
-         name='product_detail'),
 
     path('order/', OrderViewSets.as_view({'get': 'list', 'post': 'create'}),
          name='order_list'),
