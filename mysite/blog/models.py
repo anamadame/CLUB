@@ -12,7 +12,7 @@ class Brand(models.Model):
         return self.brand_name
 
 
-class Model(models.Model):  # Пользовательская модель ProductModel
+class Model(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=32, unique=True)
 
@@ -83,7 +83,7 @@ class Basket(models.Model):
     summ_products = models.IntegerField(verbose_name="общая сумма")
 
     def save(self, *args, **kwargs):
-        # Calculate the total sum based on count and product price
+
         self.summ_products = self.count * self.product.price
         super().save(*args, **kwargs)
 
@@ -100,7 +100,7 @@ class Order(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     def save(self, *args, **kwargs):
-        # Save the Order instance again with the calculated total_amount
+
         super(Order, self).save(*args, **kwargs)
 
         notify_telegram_about_order(self)
@@ -110,18 +110,17 @@ class Order(models.Model):
 
 
 def notify_telegram_about_order(order):
-    # Create a message for sending to Telegram
     products = ', '.join([basket.product.name for basket in order.products.all()])
     print(products)
     message = f"Новый заказ!\nID заказа: {order.id}\nПользователь: {order.user.username}\n" \
               f"Товары: {products}\n" \
               f"Сумма заказа: {order.total_amount}\n"
-# Send the message to Telegram
-    bot.send_message(TELEGRAM_ID, message)  # Make sure 'bot' and 'TELEGRAM_ID' are properly defined
+
+    bot.send_message(TELEGRAM_ID, message)
 
 
 class Reviews(models.Model):
-    """Отзывы"""
+
     user = models.ForeignKey(User, models.CASCADE)
     text = models.TextField()
     parent = models.ForeignKey(
@@ -139,7 +138,6 @@ class Reviews(models.Model):
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
 
-
 class News(models.Model):
     name = models.CharField(max_length=500)
     description = models.TextField()
@@ -148,6 +146,7 @@ class News(models.Model):
 
     def __str__(self):
         return self.name
+
 
 
 class About(models.Model):
